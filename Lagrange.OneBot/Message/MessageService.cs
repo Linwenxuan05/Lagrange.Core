@@ -79,14 +79,14 @@ public sealed class MessageService
         var segments = Convert(chain);
         int hash = MessageRecord.CalcMessageHash(chain.MessageId, chain.Sequence);
         string raw = ToRawMessage(segments);
-        object request = _stringPost ? new OneBotPrivateStringMsg(uin, new OneBotSender(chain.FriendUin, chain.FriendInfo?.Nickname ?? string.Empty), "friend")
+        object request = _stringPost ? new OneBotPrivateStringMsg(uin, new OneBotSender(chain.FriendUin, chain.FriendInfo?.Nickname ?? string.Empty), "friend", ((DateTimeOffset)chain.Time).ToUnixTimeSeconds())
         {
             MessageId = hash,
             UserId = chain.FriendUin,
             Message = raw,
             RawMessage = raw,
             TargetId = chain.TargetUin,
-        } : new OneBotPrivateMsg(uin, new OneBotSender(chain.FriendUin, chain.FriendInfo?.Nickname ?? string.Empty), "friend")
+        } : new OneBotPrivateMsg(uin, new OneBotSender(chain.FriendUin, chain.FriendInfo?.Nickname ?? string.Empty), "friend", ((DateTimeOffset)chain.Time).ToUnixTimeSeconds())
         {
             MessageId = hash,
             UserId = chain.FriendUin,
@@ -113,8 +113,8 @@ public sealed class MessageService
         var segments = Convert(chain);
         int hash = MessageRecord.CalcMessageHash(chain.MessageId, chain.Sequence);
         object request = _stringPost
-            ? new OneBotGroupStringMsg(uin, chain.GroupUin ?? 0, ToRawMessage(segments), chain.GroupMemberInfo ?? throw new Exception("Group member not found"), hash)
-            : new OneBotGroupMsg(uin, chain.GroupUin ?? 0, segments, ToRawMessage(segments), chain.GroupMemberInfo ?? throw new Exception("Group member not found"), hash);
+            ? new OneBotGroupStringMsg(uin, chain.GroupUin ?? 0, ToRawMessage(segments), chain.GroupMemberInfo ?? throw new Exception("Group member not found"), hash, ((DateTimeOffset)chain.Time).ToUnixTimeSeconds())
+            : new OneBotGroupMsg(uin, chain.GroupUin ?? 0, segments, ToRawMessage(segments), chain.GroupMemberInfo ?? throw new Exception("Group member not found"), hash, ((DateTimeOffset)chain.Time).ToUnixTimeSeconds());
         return request;
     }
 
@@ -124,7 +124,7 @@ public sealed class MessageService
         _context.GetCollection<MessageRecord>().Insert(new BsonValue(record.MessageHash), record);
 
         var segments = Convert(e.Chain);
-        var request = new OneBotPrivateMsg(bot.BotUin, new OneBotSender(e.Chain.FriendUin, e.Chain.FriendInfo?.Nickname ?? string.Empty), "group")
+        var request = new OneBotPrivateMsg(bot.BotUin, new OneBotSender(e.Chain.FriendUin, e.Chain.FriendInfo?.Nickname ?? string.Empty), "group", ((DateTimeOffset)e.Chain.Time).ToUnixTimeSeconds())
         {
             MessageId = record.MessageHash,
             UserId = e.Chain.FriendUin,

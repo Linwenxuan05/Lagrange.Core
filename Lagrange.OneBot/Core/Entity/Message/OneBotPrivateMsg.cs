@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Lagrange.OneBot.Core.Entity.Message;
 
 [Serializable]
-public class OneBotPrivateMsg(uint selfId, OneBotSender groupSender, string subType) : OneBotEntityBase(selfId, "message")
+public class OneBotPrivateMsg(uint selfId, OneBotSender groupSender, string subType, long time) : OneBotEntityBase(selfId, "message", time)
 {
     [JsonPropertyName("message_type")] public string MessageType { get; set; } = "private";
 
@@ -25,7 +25,7 @@ public class OneBotPrivateMsg(uint selfId, OneBotSender groupSender, string subT
 }
 
 [Serializable]
-public class OneBotPrivateStringMsg(uint selfId, OneBotSender groupSender, string subType) : OneBotEntityBase(selfId, "message")
+public class OneBotPrivateStringMsg(uint selfId, OneBotSender groupSender, string subType, long time) : OneBotEntityBase(selfId, "message", time)
 {
     [JsonPropertyName("message_type")] public string MessageType { get; set; } = "private";
 
