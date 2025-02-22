@@ -31,6 +31,13 @@ public class ForwardEntity : IMessageEntity
         Elements = new List<Elem>();
     }
 
+    public ForwardEntity(uint sequence)
+    {
+        Sequence = sequence;
+        Uid = null;
+        Elements = new List<Elem>();
+    }
+
     public ForwardEntity(MessageChain chain)
     {
         Time = chain.Time;

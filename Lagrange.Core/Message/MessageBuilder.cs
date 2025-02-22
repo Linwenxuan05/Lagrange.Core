@@ -121,6 +121,18 @@ public sealed class MessageBuilder
 
         return this;
     }
+    
+    /// <summary>
+    /// Add a forward entity to the specified message sequence number
+    /// </summary>
+    /// <param name="sequence">The sequence number of the message to be forwarded</param>
+    public MessageBuilder Forward(uint sequence)
+    {
+        var forwardEntity = new ForwardEntity(sequence);
+        _chain.Add(forwardEntity);
+
+        return this;
+    }
 
     /// <summary>
     /// Add a multimsg entity to the message chain (multi message)
